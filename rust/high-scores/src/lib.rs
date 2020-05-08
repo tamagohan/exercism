@@ -13,16 +13,16 @@ impl<'a> HighScores<'a> {
     }
 
     pub fn latest(&self) -> Option<u32> {
-        self.scores.last().map(|x| *x)
+        self.scores.last().cloned()
     }
 
     pub fn personal_best(&self) -> Option<u32> {
-        self.scores.iter().max().map(|x| *x)
+        self.scores.iter().max().cloned()
     }
 
     pub fn personal_top_three(&self) -> Vec<u32> {
         let mut vec: Vec<u32> = self.scores.to_vec();
-        vec.sort_by(|a, b| (b.cmp(a)));
+        vec.sort_unstable_by(|a, b| (b.cmp(a)));
         vec.truncate(3);
         vec
     }
