@@ -10,7 +10,7 @@ pub mod graph {
             #[derive(Debug, PartialEq)]
             pub struct Node<'a> {
                 pub value: &'a str,
-                attrs: HashMap<&'a str, &'a str>,
+                attrs: HashMap<String, String>,
             }
 
             impl<'a> Node<'a> {
@@ -21,14 +21,14 @@ pub mod graph {
                     }
                 }
 
-                pub fn with_attrs(mut self, attrs: &'a [(&str, &str)]) -> Self {
-                    let hashed_attrs = attrs.iter().cloned().collect::<HashMap<&str, &str>>();
+                pub fn with_attrs(mut self, attrs: &[(&str, &str)]) -> Self {
+                    let hashed_attrs = attrs.iter().map(|(x, y)| (x.to_string(), y.to_string()));
                     self.attrs.extend(hashed_attrs);
                     self
                 }
 
                 pub fn get_attr(&self, value: &str) -> Option<&str> {
-                    self.attrs.get(value).map(|v| *v)
+                    self.attrs.get(value).map(|v| v.as_str())
                 }
             }
         }
