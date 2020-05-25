@@ -7,7 +7,7 @@ pub mod graph {
         pub mod node {
             use std::collections::HashMap;
 
-            #[derive(Debug, PartialEq)]
+            #[derive(Debug, PartialEq, Clone)]
             pub struct Node {
                 pub value: String,
                 attrs: HashMap<String, String>,
@@ -35,7 +35,7 @@ pub mod graph {
         pub mod edge {
             use std::collections::HashMap;
 
-            #[derive(Debug, PartialEq)]
+            #[derive(Debug, PartialEq, Clone)]
             pub struct Edge {
                 from: String,
                 to: String,
@@ -82,12 +82,12 @@ pub mod graph {
         }
 
         pub fn with_nodes(mut self, nodes: &[Node]) -> Self {
-            self.nodes.iter().collect::<Vec<&Node>>().extend(nodes);
+            self.nodes.extend(nodes.iter().cloned());
             self
         }
 
         pub fn with_edges(mut self, edges: &[Edge]) -> Self {
-            self.edges.iter().collect::<Vec<&Edge>>().extend(edges);
+            self.edges.extend(edges.iter().cloned());
             self
         }
 
