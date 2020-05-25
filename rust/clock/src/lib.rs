@@ -39,7 +39,6 @@ impl Clock {
     pub fn add_minutes(&self, minutes: i32) -> Self {
         let sum_minutes = self.hour * 60 + self.minute + minutes;
         let extracted = Self::extract_minutes(sum_minutes);
-        println!("{}", extracted);
 
         return Self {
             hour: extracted / 60,
