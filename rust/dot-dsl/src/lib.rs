@@ -8,15 +8,15 @@ pub mod graph {
             use std::collections::HashMap;
 
             #[derive(Debug, PartialEq)]
-            pub struct Node<'a> {
-                pub value: &'a str,
+            pub struct Node {
+                pub value: String,
                 attrs: HashMap<String, String>,
             }
 
-            impl<'a> Node<'a> {
-                pub fn new(v: &'a str) -> Self {
+            impl Node {
+                pub fn new(v: &str) -> Self {
                     Self {
-                        value: v,
+                        value: v.to_string(),
                         attrs: HashMap::new(),
                     }
                 }
@@ -36,23 +36,23 @@ pub mod graph {
             use std::collections::HashMap;
 
             #[derive(Debug, PartialEq)]
-            pub struct Edge<'a> {
-                from: &'a str,
-                to: &'a str,
-                attrs: HashMap<&'a str, &'a str>,
+            pub struct Edge {
+                from: String,
+                to: String,
+                attrs: HashMap<String, String>,
             }
 
-            impl<'a> Edge<'a> {
-                pub fn new(from: &'a str, to: &'a str) -> Self {
+            impl Edge {
+                pub fn new(from: &str, to: &str) -> Self {
                     Self {
-                        from: from,
-                        to: to,
+                        from: from.to_string(),
+                        to: to.to_string(),
                         attrs: HashMap::new(),
                     }
                 }
 
-                pub fn with_attrs(mut self, attrs: &'a [(&str, &str)]) -> Self {
-                    let hashed_attrs = attrs.iter().cloned().collect::<HashMap<&str, &str>>();
+                pub fn with_attrs(mut self, attrs: &[(&str, &str)]) -> Self {
+                    let hashed_attrs = attrs.iter().map(|(x, y)| (x.to_string(), y.to_string()));
                     self.attrs.extend(hashed_attrs);
                     self
                 }
@@ -60,13 +60,13 @@ pub mod graph {
         }
     }
 
-    pub struct Graph<'a> {
-        pub nodes: Vec<Node<'a>>,
-        pub edges: Vec<Edge<'a>>,
+    pub struct Graph {
+        pub nodes: Vec<Node>,
+        pub edges: Vec<Edge>,
         pub attrs: HashMap<String, String>,
     }
 
-    impl<'a> Graph<'a> {
+    impl Graph {
         pub fn new() -> Self {
             Self {
                 nodes: Vec::new(),
@@ -75,7 +75,7 @@ pub mod graph {
             }
         }
 
-        pub fn with_attrs(mut self, attrs: &'a [(&str, &str)]) -> Self {
+        pub fn with_attrs(mut self, attrs: &[(&str, &str)]) -> Self {
             let hashed_attrs = attrs.iter().map(|(x, y)| (x.to_string(), y.to_string()));
             self.attrs.extend(hashed_attrs);
             self
