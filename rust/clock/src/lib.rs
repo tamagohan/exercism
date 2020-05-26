@@ -1,5 +1,7 @@
 use std::fmt;
 
+const DAY: i32 = 60 * 24;
+
 #[derive(Debug, PartialEq)]
 pub struct Clock {
     hour: i32,
@@ -23,17 +25,7 @@ impl Clock {
     }
 
     fn extract_minutes(minutes: i32) -> i32 {
-        let rest = if minutes > 0 {
-            minutes % (60 * 24)
-        } else {
-            60 * 24 + (minutes % (60 * 24))
-        };
-
-        if rest == 60 * 24 {
-            0
-        } else {
-            rest
-        }
+        ((minutes % DAY) + DAY) % DAY
     }
 
     pub fn add_minutes(&self, minutes: i32) -> Self {
