@@ -1,22 +1,78 @@
 use std::iter::FromIterator;
 
+//pub struct Entry<T> {
+//    value: T,
+//    next: Box<Entry<T>>,
+//}
+//
+//pub enum List<T> {
+//    Nil,
+//    Entry(T),
+//}
+
+//pub struct Entry<T> {
+//    value: T,
+//    next: NextPointer<T>,
+//}
+//
+//pub enum NextPointer<T> {
+//    Nil,
+//    Box<Entry<T>>,
+//}
+
+pub enum NextPointer<T> {
+    Nil,
+    Entry { value: T, next: Box<NextPointer<T>> },
+}
+
 pub struct SimpleLinkedList<T> {
-    // Delete this field
-    // dummy is needed to avoid unused parameter error during compilation
-    dummy: ::std::marker::PhantomData<T>,
+    first: Box<NextPointer<T>>,
 }
 
 impl<T> SimpleLinkedList<T> {
     pub fn new() -> Self {
-        unimplemented!()
+        Self {
+            first: Box::new(NextPointer::Nil),
+        }
     }
 
     pub fn len(&self) -> usize {
-        unimplemented!()
+        match *self.first {
+            NextPointer::Nil => 0,
+            _ => Self::len_imp(&self.first),
+        }
+    }
+    fn len_imp(p: &Box<NextPointer<T>>) -> usize {
+        match &**p {
+            NextPointer::Nil => 0,
+            NextPointer::Entry { next, .. } => Self::len_imp(&next) + 1,
+        }
     }
 
-    pub fn push(&mut self, _element: T) {
-        unimplemented!()
+    pub fn push(&mut self, element: T) {
+        match *self.first {
+            NextPointer::Nil => {
+                self.first = Box::new(NextPointer::Entry {
+                    value: element,
+                    next: Box::new(NextPointer::Nil),
+                });
+            }
+            _ => Self::push_imp(&mut self.first, element),
+        }
+    }
+    fn push_imp(mut p: &Box<NextPointer<T>>, element: T) {
+        match &**p {
+            NextPointer::Nil => (),
+            NextPointer::Entry { next: mut next, .. } => match *next {
+                NextPointer::Nil => {
+                    next = Box::new(NextPointer::Entry {
+                        value: element,
+                        next: Box::new(NextPointer::Nil),
+                    });
+                }
+                NextPointer::Entry { .. } => Self::push_imp(&mut next, element),
+            },
+        }
     }
 
     pub fn pop(&mut self) -> Option<T> {
