@@ -1,88 +1,66 @@
 use std::iter::FromIterator;
 
-//pub struct Entry<T> {
-//    value: T,
-//    next: Box<Entry<T>>,
-//}
-//
-//pub enum List<T> {
-//    Nil,
-//    Entry(T),
-//}
-
-//pub struct Entry<T> {
-//    value: T,
-//    next: NextPointer<T>,
-//}
-//
-//pub enum NextPointer<T> {
-//    Nil,
-//    Box<Entry<T>>,
-//}
-
-pub struct Entry<T> {
-    value: T,
-    next: Box<NextPointer<T>>,
-}
-
-pub enum NextPointer<T> {
-    Nil,
-    Elem(Entry<T>),
+pub struct Node<T> {
+    data: T,
+    next: Option<Box<Node<T>>>,
 }
 
 pub struct SimpleLinkedList<T> {
-    first: Box<NextPointer<T>>,
+    head: Option<Box<Node<T>>>,
 }
 
-impl<T> SimpleLinkedList<T> {
+impl<T: Copy> SimpleLinkedList<T> {
     pub fn new() -> Self {
-        Self {
-            first: Box::new(NextPointer::Nil),
-        }
+        Self { head: None }
     }
 
     pub fn len(&self) -> usize {
-        match *self.first {
-            NextPointer::Nil => 0,
-            _ => Self::len_imp(&self.first),
-        }
+        Self::len_imp(&self.head)
     }
-    fn len_imp(p: &Box<NextPointer<T>>) -> usize {
-        match &**p {
-            NextPointer::Nil => 0,
-            NextPointer::Elem(Entry { next, .. }) => Self::len_imp(&next) + 1,
+    fn len_imp(node: &Option<Box<Node<T>>>) -> usize {
+        match node {
+            None => 0,
+            Some(n) => Self::len_imp(&n.next) + 1,
         }
     }
 
     pub fn push(&mut self, element: T) {
-        match *self.first {
-            NextPointer::Nil => {
-                self.first = Box::new(NextPointer::Elem(Entry {
-                    value: element,
-                    next: Box::new(NextPointer::Nil),
-                }));
+        match self.head {
+            None => {
+                self.head = Some(Box::new(Node {
+                    data: element,
+                    next: None,
+                }))
             }
-            _ => {
-                let mut entry = Self::last(&mut self.first);
-                entry.next = Box::new(NextPointer::Elem(Entry {
-                    value: element,
-                    next: Box::new(NextPointer::Nil),
-                }));
+            Some(_) => {
+                let mut n = Self::push_imp(&mut self.head);
+                n.next = Some(Box::new(Node {
+                    data: element,
+                    next: None,
+                }))
             }
         }
     }
-    fn last(p: &mut Box<NextPointer<T>>) -> &mut Entry<T> {
-        match &&(**p) {
-            NextPointer::Nil => panic!("bug"),
-            NextPointer::Elem(&entry) => match *entry.next {
-                NextPointer::Nil => return &mut entry,
-                NextPointer::Elem(Entry { next: next, .. }) => Self::last(&mut next),
+
+    fn push_imp(node: &mut Option<Box<Node<T>>>) -> &mut Node<T> {
+        match node {
+            None => panic!("hoge"),
+            Some(n) => match n.next {
+                None => n,
+                Some(_) => Self::push_imp(&mut n.next),
             },
         }
     }
 
     pub fn pop(&mut self) -> Option<T> {
-        unimplemented!()
+        match self {
+            Self { head: None } => None,
+            Self { head: Some(_) } => {
+                let node = self.head.take().unwrap();
+                self.head = node.next;
+                Some(node.data)
+            }
+        }
     }
 
     pub fn peek(&self) -> Option<&T> {
