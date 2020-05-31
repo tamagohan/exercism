@@ -20,9 +20,14 @@ use std::iter::FromIterator;
 //    Box<Entry<T>>,
 //}
 
+pub struct Entry<T> {
+    value: T,
+    next: Box<NextPointer<T>>,
+}
+
 pub enum NextPointer<T> {
     Nil,
-    Entry { value: T, next: Box<NextPointer<T>> },
+    Elem(Entry<T>),
 }
 
 pub struct SimpleLinkedList<T> {
@@ -45,32 +50,33 @@ impl<T> SimpleLinkedList<T> {
     fn len_imp(p: &Box<NextPointer<T>>) -> usize {
         match &**p {
             NextPointer::Nil => 0,
-            NextPointer::Entry { next, .. } => Self::len_imp(&next) + 1,
+            NextPointer::Elem(Entry { next, .. }) => Self::len_imp(&next) + 1,
         }
     }
 
     pub fn push(&mut self, element: T) {
         match *self.first {
             NextPointer::Nil => {
-                self.first = Box::new(NextPointer::Entry {
+                self.first = Box::new(NextPointer::Elem(Entry {
                     value: element,
                     next: Box::new(NextPointer::Nil),
-                });
+                }));
             }
-            _ => Self::push_imp(&mut self.first, element),
+            _ => {
+                let mut entry = Self::last(&mut self.first);
+                entry.next = Box::new(NextPointer::Elem(Entry {
+                    value: element,
+                    next: Box::new(NextPointer::Nil),
+                }));
+            }
         }
     }
-    fn push_imp(mut p: &Box<NextPointer<T>>, element: T) {
-        match &**p {
-            NextPointer::Nil => (),
-            NextPointer::Entry { next: mut next, .. } => match *next {
-                NextPointer::Nil => {
-                    next = Box::new(NextPointer::Entry {
-                        value: element,
-                        next: Box::new(NextPointer::Nil),
-                    });
-                }
-                NextPointer::Entry { .. } => Self::push_imp(&mut next, element),
+    fn last(p: &mut Box<NextPointer<T>>) -> &mut Entry<T> {
+        match &&(**p) {
+            NextPointer::Nil => panic!("bug"),
+            NextPointer::Elem(&entry) => match *entry.next {
+                NextPointer::Nil => return &mut entry,
+                NextPointer::Elem(Entry { next: next, .. }) => Self::last(&mut next),
             },
         }
     }
