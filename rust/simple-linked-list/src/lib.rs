@@ -33,7 +33,7 @@ impl<T: Copy> SimpleLinkedList<T> {
                 }))
             }
             Some(_) => {
-                let mut n = Self::push_imp(&mut self.head);
+                let mut n = Self::tail(&mut self.head);
                 n.next = Some(Box::new(Node {
                     data: element,
                     next: None,
@@ -42,12 +42,12 @@ impl<T: Copy> SimpleLinkedList<T> {
         }
     }
 
-    fn push_imp(node: &mut Option<Box<Node<T>>>) -> &mut Node<T> {
+    fn tail(node: &mut Option<Box<Node<T>>>) -> &mut Node<T> {
         match node {
-            None => panic!("hoge"),
+            None => panic!("node must not be None!"),
             Some(n) => match n.next {
                 None => n,
-                Some(_) => Self::push_imp(&mut n.next),
+                Some(_) => Self::tail(&mut n.next),
             },
         }
     }
