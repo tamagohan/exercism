@@ -62,13 +62,13 @@ impl<T: Copy + PartialOrd> SimpleLinkedList<T> {
     fn peek_imp<'a>(node: &'a Option<Box<Node<T>>>, max: &'a T) -> Option<&'a T> {
         match node {
             None => Some(max),
-            Some(next_node) => {
-                let new_max = if *max < next_node.data {
-                    &next_node.data
+            Some(cur_node) => {
+                let new_max = if *max < cur_node.data {
+                    &cur_node.data
                 } else {
                     max
                 };
-                Self::peek_imp(&next_node.next, new_max)
+                Self::peek_imp(&cur_node.next, new_max)
             }
         }
     }
