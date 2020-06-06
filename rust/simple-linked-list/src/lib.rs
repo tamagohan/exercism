@@ -25,21 +25,10 @@ impl<T: Copy + PartialOrd + std::fmt::Debug> SimpleLinkedList<T> {
     }
 
     pub fn push(&mut self, element: T) {
-        match self {
-            Self { head: None } => {
-                self.head = Some(Box::new(Node {
-                    data: element,
-                    next: None,
-                }));
-            }
-            Self { head: Some(_) } => {
-                let node = self.head.take().unwrap();
-                self.head = Some(Box::new(Node {
-                    data: element,
-                    next: Some(node),
-                }));
-            }
-        }
+        self.head = Some(Box::new(Node {
+            data: element,
+            next: self.head.take(),
+        }));
     }
 
     pub fn pop(&mut self) -> Option<T> {
