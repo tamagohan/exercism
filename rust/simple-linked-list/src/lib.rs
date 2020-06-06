@@ -1,10 +1,10 @@
 use std::iter::FromIterator;
-
+#[derive(Debug)]
 pub struct Node<T> {
     data: T,
     next: Option<Box<Node<T>>>,
 }
-
+#[derive(Debug)]
 pub struct SimpleLinkedList<T> {
     head: Option<Box<Node<T>>>,
 }
@@ -74,7 +74,9 @@ impl<T: Copy + PartialOrd> SimpleLinkedList<T> {
     }
 
     pub fn rev(self) -> SimpleLinkedList<T> {
-        unimplemented!()
+        let mut vec: Vec<T> = self.into();
+        vec.reverse();
+        vec.into_iter().collect::<SimpleLinkedList<T>>()
     }
 }
 
@@ -101,6 +103,21 @@ impl<T: Copy + PartialOrd> FromIterator<T> for SimpleLinkedList<T> {
 
 impl<T> Into<Vec<T>> for SimpleLinkedList<T> {
     fn into(self) -> Vec<T> {
-        unimplemented!()
+        fn into_imp<T>(node: Option<Box<Node<T>>>, mut v: Vec<T>) -> Vec<T> {
+            match node {
+                None => v,
+                Some(cur_node) => {
+                    v.push(cur_node.data);
+                    into_imp(cur_node.next, v)
+                }
+            }
+        }
+        let v = Vec::new();
+        let mut v2 = match self {
+            Self { head: None } => v,
+            Self { head: Some(_) } => into_imp(self.head, v),
+        };
+        v2.reverse();
+        v2
     }
 }
