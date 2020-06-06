@@ -78,9 +78,13 @@ impl<T: Copy + PartialOrd> SimpleLinkedList<T> {
     }
 }
 
-impl<T> FromIterator<T> for SimpleLinkedList<T> {
-    fn from_iter<I: IntoIterator<Item = T>>(_iter: I) -> Self {
-        unimplemented!()
+impl<T: Copy + PartialOrd> FromIterator<T> for SimpleLinkedList<T> {
+    fn from_iter<I: IntoIterator<Item = T>>(iter: I) -> Self {
+        let mut list = SimpleLinkedList::new();
+        for i in iter {
+            list.push(i);
+        }
+        return list;
     }
 }
 
