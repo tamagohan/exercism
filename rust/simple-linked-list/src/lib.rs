@@ -25,30 +25,20 @@ impl<T: Copy> SimpleLinkedList<T> {
     }
 
     pub fn push(&mut self, element: T) {
-        match self.head {
-            None => {
+        match self {
+            Self { head: None } => {
                 self.head = Some(Box::new(Node {
                     data: element,
                     next: None,
-                }))
+                }));
             }
-            Some(_) => {
-                let mut n = Self::tail(&mut self.head);
-                n.next = Some(Box::new(Node {
+            Self { head: Some(_) } => {
+                let node = self.head.take().unwrap();
+                self.head = Some(Box::new(Node {
                     data: element,
-                    next: None,
-                }))
+                    next: Some(node),
+                }));
             }
-        }
-    }
-
-    fn tail(node: &mut Option<Box<Node<T>>>) -> &mut Node<T> {
-        match node {
-            None => panic!("node must not be None!"),
-            Some(n) => match n.next {
-                None => n,
-                Some(_) => Self::tail(&mut n.next),
-            },
         }
     }
 
