@@ -9,7 +9,7 @@ pub struct SimpleLinkedList<T> {
     head: Option<Box<Node<T>>>,
 }
 
-impl<T: Copy> SimpleLinkedList<T> {
+impl<T: Copy + PartialOrd> SimpleLinkedList<T> {
     pub fn new() -> Self {
         Self { head: None }
     }
@@ -54,7 +54,23 @@ impl<T: Copy> SimpleLinkedList<T> {
     }
 
     pub fn peek(&self) -> Option<&T> {
-        unimplemented!()
+        match self {
+            Self { head: None } => None,
+            Self { head: Some(node) } => Self::peek_imp(&self.head, &node.data),
+        }
+    }
+    fn peek_imp<'a>(node: &'a Option<Box<Node<T>>>, max: &'a T) -> Option<&'a T> {
+        match node {
+            None => Some(max),
+            Some(next_node) => {
+                let new_max = if *max < next_node.data {
+                    &next_node.data
+                } else {
+                    max
+                };
+                Self::peek_imp(&next_node.next, new_max)
+            }
+        }
     }
 
     pub fn rev(self) -> SimpleLinkedList<T> {
