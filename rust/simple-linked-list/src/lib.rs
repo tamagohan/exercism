@@ -1,15 +1,15 @@
 use std::iter::FromIterator;
-#[derive(Debug)]
+
 pub struct Node<T> {
     data: T,
     next: Option<Box<Node<T>>>,
 }
-#[derive(Debug)]
+
 pub struct SimpleLinkedList<T> {
     head: Option<Box<Node<T>>>,
 }
 
-impl<T: Clone + PartialOrd + std::fmt::Debug> SimpleLinkedList<T> {
+impl<T: Clone + PartialOrd> SimpleLinkedList<T> {
     pub fn new() -> Self {
         Self { head: None }
     }
@@ -60,7 +60,7 @@ impl<T: Clone + PartialOrd + std::fmt::Debug> SimpleLinkedList<T> {
     }
 }
 
-impl<T: Copy + PartialOrd + std::fmt::Debug> FromIterator<T> for SimpleLinkedList<T> {
+impl<T: Copy + PartialOrd> FromIterator<T> for SimpleLinkedList<T> {
     fn from_iter<I: IntoIterator<Item = T>>(iter: I) -> Self {
         let mut list = SimpleLinkedList::new();
         for i in iter {
