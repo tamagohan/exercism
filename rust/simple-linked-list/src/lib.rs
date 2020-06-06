@@ -77,23 +77,12 @@ impl<T: Copy + PartialOrd + std::fmt::Debug> FromIterator<T> for SimpleLinkedLis
 // of IntoIterator is that implementing that interface is fairly complicated, and
 // demands more of the student than we expect at this point in the track.
 
-impl<T> Into<Vec<T>> for SimpleLinkedList<T> {
-    fn into(self) -> Vec<T> {
-        fn into_imp<T>(node: Option<Box<Node<T>>>, mut v: Vec<T>) -> Vec<T> {
-            match node {
-                None => v,
-                Some(cur_node) => {
-                    v.push(cur_node.data);
-                    into_imp(cur_node.next, v)
-                }
-            }
+impl<T: Copy + PartialOrd + std::fmt::Debug> Into<Vec<T>> for SimpleLinkedList<T> {
+    fn into(mut self) -> Vec<T> {
+        let mut v = vec![];
+        while let Some(elem) = self.pop() {
+            v.push(elem);
         }
-        let v = Vec::new();
-        let mut v2 = match self {
-            Self { head: None } => v,
-            Self { head: Some(_) } => into_imp(self.head, v),
-        };
-        v2.reverse();
-        v2
+        v.into_iter().rev().collect()
     }
 }
