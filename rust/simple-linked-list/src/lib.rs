@@ -9,7 +9,7 @@ pub struct SimpleLinkedList<T> {
     head: Option<Box<Node<T>>>,
 }
 
-impl<T: Clone + PartialOrd> SimpleLinkedList<T> {
+impl<T: Clone> SimpleLinkedList<T> {
     pub fn new() -> Self {
         Self { head: None }
     }
@@ -60,7 +60,7 @@ impl<T: Clone + PartialOrd> SimpleLinkedList<T> {
     }
 }
 
-impl<T: Copy + PartialOrd> FromIterator<T> for SimpleLinkedList<T> {
+impl<T: Clone> FromIterator<T> for SimpleLinkedList<T> {
     fn from_iter<I: IntoIterator<Item = T>>(iter: I) -> Self {
         let mut list = SimpleLinkedList::new();
         for i in iter {
@@ -81,7 +81,7 @@ impl<T: Copy + PartialOrd> FromIterator<T> for SimpleLinkedList<T> {
 // of IntoIterator is that implementing that interface is fairly complicated, and
 // demands more of the student than we expect at this point in the track.
 
-impl<T: Copy + PartialOrd + std::fmt::Debug> Into<Vec<T>> for SimpleLinkedList<T> {
+impl<T: Clone> Into<Vec<T>> for SimpleLinkedList<T> {
     fn into(mut self) -> Vec<T> {
         let mut v = vec![];
         while let Some(elem) = self.pop() {
