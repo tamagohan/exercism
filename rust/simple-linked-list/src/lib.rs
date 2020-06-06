@@ -9,7 +9,7 @@ pub struct SimpleLinkedList<T> {
     head: Option<Box<Node<T>>>,
 }
 
-impl<T: Copy + PartialOrd + std::fmt::Debug> SimpleLinkedList<T> {
+impl<T: Clone + PartialOrd + std::fmt::Debug> SimpleLinkedList<T> {
     pub fn new() -> Self {
         Self { head: None }
     }
@@ -50,9 +50,13 @@ impl<T: Copy + PartialOrd + std::fmt::Debug> SimpleLinkedList<T> {
     }
 
     pub fn rev(self) -> SimpleLinkedList<T> {
-        let mut vec: Vec<T> = self.into();
-        vec.reverse();
-        vec.into_iter().collect::<SimpleLinkedList<T>>()
+        let mut list = Self::new();
+        let mut np = &(self.head);
+        while np.is_some() {
+            list.push(np.as_ref().unwrap().data.clone());
+            np = &np.as_ref().unwrap().next;
+        }
+        list
     }
 }
 
