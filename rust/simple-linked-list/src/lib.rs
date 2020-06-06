@@ -43,22 +43,9 @@ impl<T: Copy + PartialOrd + std::fmt::Debug> SimpleLinkedList<T> {
     }
 
     pub fn peek(&self) -> Option<&T> {
-        match self {
-            Self { head: None } => None,
-            Self { head: Some(node) } => Self::peek_imp(&self.head, &node.data),
-        }
-    }
-    fn peek_imp<'a>(node: &'a Option<Box<Node<T>>>, max: &'a T) -> Option<&'a T> {
-        match node {
-            None => Some(max),
-            Some(cur_node) => {
-                let new_max = if *max < cur_node.data {
-                    &cur_node.data
-                } else {
-                    max
-                };
-                Self::peek_imp(&cur_node.next, new_max)
-            }
+        match self.head {
+            None => None,
+            Some(_) => Some(&self.head.as_ref().unwrap().data),
         }
     }
 
