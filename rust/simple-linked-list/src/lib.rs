@@ -9,19 +9,19 @@ pub struct SimpleLinkedList<T> {
     head: Option<Box<Node<T>>>,
 }
 
-impl<T: Copy + PartialOrd> SimpleLinkedList<T> {
+impl<T: Copy + PartialOrd + std::fmt::Debug> SimpleLinkedList<T> {
     pub fn new() -> Self {
         Self { head: None }
     }
 
     pub fn len(&self) -> usize {
-        Self::len_imp(&self.head)
-    }
-    fn len_imp(node: &Option<Box<Node<T>>>) -> usize {
-        match node {
-            None => 0,
-            Some(n) => Self::len_imp(&n.next) + 1,
+        let mut hn = &self.head;
+        let mut length = 0;
+        while hn.is_some() {
+            length += 1;
+            hn = &hn.as_ref().unwrap().next;
         }
+        length
     }
 
     pub fn push(&mut self, element: T) {
@@ -80,7 +80,7 @@ impl<T: Copy + PartialOrd> SimpleLinkedList<T> {
     }
 }
 
-impl<T: Copy + PartialOrd> FromIterator<T> for SimpleLinkedList<T> {
+impl<T: Copy + PartialOrd + std::fmt::Debug> FromIterator<T> for SimpleLinkedList<T> {
     fn from_iter<I: IntoIterator<Item = T>>(iter: I) -> Self {
         let mut list = SimpleLinkedList::new();
         for i in iter {
