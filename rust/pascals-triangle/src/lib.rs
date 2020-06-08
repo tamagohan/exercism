@@ -1,3 +1,5 @@
+use std::iter;
+
 pub struct PascalsTriangle {
     triangle: Vec<Vec<u32>>,
 }
@@ -13,18 +15,10 @@ impl PascalsTriangle {
             1 => vec![vec![1]],
             _ => {
                 let mut triangle = Self::new_imp(row_count - 1);
-                let pre_row = triangle.get((row_count - 2) as usize).unwrap();
-                let row = (0..row_count)
-                    .map(|x| {
-                        let l = if x > 0 {
-                            pre_row.get((x - 1) as usize).unwrap_or(&0)
-                        } else {
-                            &0
-                        };
-                        let r = pre_row.get(x as usize).unwrap_or(&0);
-                        l + r
-                    })
-                    .collect::<Vec<u32>>();
+                let pre_row = triangle.last().unwrap();
+                let zip1 = iter::once(&0).chain(pre_row.iter());
+                let zip2 = (pre_row.iter()).chain(iter::once(&0));
+                let row = zip1.zip(zip2).map(|(m, n)| m + n).collect();
                 triangle.push(row);
                 triangle
             }
