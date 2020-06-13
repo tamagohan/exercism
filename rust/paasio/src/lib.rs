@@ -1,13 +1,21 @@
 use std::io::{Read, Result, Write};
 
-pub struct ReadStats<R>(::std::marker::PhantomData<R>);
+pub struct ReadStats<R> {
+    data: R,
+    reads: usize,
+    bytes_through: usize,
+}
 
 impl<R: Read> ReadStats<R> {
     // _wrapped is ignored because R is not bounded on Debug or Display and therefore
     // can't be passed through format!(). For actual implementation you will likely
     // wish to remove the leading underscore so the variable is not ignored.
-    pub fn new(_wrapped: R) -> ReadStats<R> {
-        unimplemented!()
+    pub fn new(wrapped: R) -> ReadStats<R> {
+        Self {
+            data: wrapped,
+            reads: 0,
+            bytes_through: 0,
+        }
     }
 
     pub fn get_ref(&self) -> &R {
@@ -15,28 +23,35 @@ impl<R: Read> ReadStats<R> {
     }
 
     pub fn bytes_through(&self) -> usize {
-        unimplemented!()
+        self.bytes_through
     }
 
     pub fn reads(&self) -> usize {
-        unimplemented!()
+        self.reads
     }
 }
 
 impl<R: Read> Read for ReadStats<R> {
     fn read(&mut self, buf: &mut [u8]) -> Result<usize> {
-        unimplemented!("Collect statistics about this call reading {:?}", buf)
+        self.reads += 1;
+        let len = self.data.read(buf);
+        if let Ok(l) = len {
+            self.bytes_through += l;
+        }
+        len
     }
 }
 
-pub struct WriteStats<W>(::std::marker::PhantomData<W>);
+pub struct WriteStats<W> {
+    data: W,
+}
 
 impl<W: Write> WriteStats<W> {
     // _wrapped is ignored because W is not bounded on Debug or Display and therefore
     // can't be passed through format!(). For actual implementation you will likely
     // wish to remove the leading underscore so the variable is not ignored.
-    pub fn new(_wrapped: W) -> WriteStats<W> {
-        unimplemented!()
+    pub fn new(wrapped: W) -> WriteStats<W> {
+        Self { data: wrapped }
     }
 
     pub fn get_ref(&self) -> &W {
