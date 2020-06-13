@@ -19,7 +19,7 @@ impl<R: Read> ReadStats<R> {
     }
 
     pub fn get_ref(&self) -> &R {
-        unimplemented!()
+        &self.data
     }
 
     pub fn bytes_through(&self) -> usize {

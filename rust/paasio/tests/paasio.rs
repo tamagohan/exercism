@@ -187,7 +187,6 @@ test_read!(read_file(
 ));
 
 #[test]
-#[ignore]
 fn read_stats_by_ref_returns_wrapped_reader() {
     use paasio::ReadStats;
 
