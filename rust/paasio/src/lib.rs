@@ -33,11 +33,11 @@ impl<R: Read> ReadStats<R> {
 
 impl<R: Read> Read for ReadStats<R> {
     fn read(&mut self, buf: &mut [u8]) -> Result<usize> {
-        self.reads += 1;
         let len = self.data.read(buf);
         if let Ok(l) = len {
             self.bytes_through += l;
         }
+        self.reads += 1;
         len
     }
 }
