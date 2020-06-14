@@ -44,6 +44,8 @@ impl<R: Read> Read for ReadStats<R> {
 
 pub struct WriteStats<W> {
     data: W,
+    writes: usize,
+    bytes_through: usize,
 }
 
 impl<W: Write> WriteStats<W> {
@@ -51,25 +53,34 @@ impl<W: Write> WriteStats<W> {
     // can't be passed through format!(). For actual implementation you will likely
     // wish to remove the leading underscore so the variable is not ignored.
     pub fn new(wrapped: W) -> WriteStats<W> {
-        Self { data: wrapped }
+        Self {
+            data: wrapped,
+            writes: 0,
+            bytes_through: 0,
+        }
     }
 
     pub fn get_ref(&self) -> &W {
-        unimplemented!()
+        &self.data
     }
 
     pub fn bytes_through(&self) -> usize {
-        unimplemented!()
+        self.bytes_through
     }
 
     pub fn writes(&self) -> usize {
-        unimplemented!()
+        self.writes
     }
 }
 
 impl<W: Write> Write for WriteStats<W> {
     fn write(&mut self, buf: &[u8]) -> Result<usize> {
-        unimplemented!("Collect statistics about this call writing {:?}", buf)
+        let len = self.data.write(buf);
+        if let Ok(l) = len {
+            self.bytes_through += l;
+        }
+        self.writes += 1;
+        len
     }
 
     fn flush(&mut self) -> Result<()> {
