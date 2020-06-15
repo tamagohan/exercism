@@ -33,12 +33,11 @@ impl<R: Read> ReadStats<R> {
 
 impl<R: Read> Read for ReadStats<R> {
     fn read(&mut self, buf: &mut [u8]) -> Result<usize> {
-        let len = self.data.read(buf);
-        if let Ok(l) = len {
-            self.bytes_through += l;
-        }
         self.reads += 1;
-        len
+        self.data.read(buf).map(|len| {
+            self.bytes_through += len;
+            len
+        })
     }
 }
 
@@ -75,12 +74,11 @@ impl<W: Write> WriteStats<W> {
 
 impl<W: Write> Write for WriteStats<W> {
     fn write(&mut self, buf: &[u8]) -> Result<usize> {
-        let len = self.data.write(buf);
-        if let Ok(l) = len {
-            self.bytes_through += l;
-        }
         self.writes += 1;
-        len
+        self.data.write(buf).map(|len| {
+            self.bytes_through += len;
+            len
+        })
     }
 
     fn flush(&mut self) -> Result<()> {
