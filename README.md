@@ -10,3 +10,4 @@
 * [Grains](./rust/grains)
 * [Reverse String](./rust/reverse-string/)
 * [High Scores](./rust/high-scores/)
+* [Bob](./rust/bob/)
