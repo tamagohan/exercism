@@ -20,8 +20,9 @@ fn valid(nucleotide: char) -> Result<char, char> {
 }
 
 pub fn nucleotide_counts(dna: &str) -> Result<HashMap<char, usize>, char> {
-    unimplemented!(
-        "How much of every nucleotide type is contained inside DNA string '{}'?",
-        dna
-    );
+    NUCLEOTIDES
+        .iter()
+        .map(|n| count(n.clone(), dna).and_then(|r| Ok((n.clone(), r))))
+        .collect::<Result<Vec<(char, usize)>, char>>()
+        .and_then(|i| Ok(i.into_iter().collect()))
 }
