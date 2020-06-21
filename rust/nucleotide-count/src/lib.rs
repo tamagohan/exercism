@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 
+const NUCLEOTIDES: [char; 4] = ['A', 'C', 'G', 'T'];
+
 pub fn count(nucleotide: char, dna: &str) -> Result<usize, char> {
     match valid(nucleotide) {
         Err(c) => Err(c),
@@ -11,9 +13,8 @@ pub fn count(nucleotide: char, dna: &str) -> Result<usize, char> {
 }
 
 fn valid(nucleotide: char) -> Result<char, char> {
-    let nucleotides = ['A', 'C', 'G', 'T'];
     match nucleotide {
-        c if nucleotides.contains(&c) => Ok(nucleotide),
+        c if NUCLEOTIDES.contains(&c) => Ok(nucleotide),
         _ => Err(nucleotide),
     }
 }
