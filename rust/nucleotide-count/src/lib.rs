@@ -7,8 +7,9 @@ pub fn count(nucleotide: char, dna: &str) -> Result<usize, char> {
         Err(c) => Err(c),
         Ok(_) => dna
             .chars()
-            .map(|c| valid(c).and_then(|c| if c == nucleotide { Ok(1) } else { Ok(0) }))
-            .sum::<Result<usize, char>>(),
+            .map(|c| valid(c))
+            .collect::<Result<Vec<char>, char>>()
+            .map(|v| v.into_iter().filter(|n| *n == nucleotide).count()),
     }
 }
 
