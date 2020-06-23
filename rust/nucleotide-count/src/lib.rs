@@ -9,7 +9,7 @@ pub fn count(nucleotide: char, dna: &str) -> Result<usize, char> {
             .chars()
             .map(|c| valid(c))
             .collect::<Result<Vec<char>, char>>()
-            .map(|v| v.into_iter().filter(|n| *n == nucleotide).count()),
+            .map(|v| v.into_iter().filter(|c| *c == nucleotide).count()),
     }
 }
 
@@ -23,7 +23,7 @@ fn valid(nucleotide: char) -> Result<char, char> {
 pub fn nucleotide_counts(dna: &str) -> Result<HashMap<char, usize>, char> {
     NUCLEOTIDES
         .iter()
-        .map(|n| count(n.clone(), dna).and_then(|r| Ok((n.clone(), r))))
+        .map(|n| count(n.clone(), dna).and_then(|count| Ok((n.clone(), count))))
         .collect::<Result<Vec<(char, usize)>, char>>()
-        .and_then(|i| Ok(i.into_iter().collect()))
+        .and_then(|v| Ok(v.into_iter().collect()))
 }
