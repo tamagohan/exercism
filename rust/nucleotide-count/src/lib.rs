@@ -24,6 +24,5 @@ pub fn nucleotide_counts(dna: &str) -> Result<HashMap<char, usize>, char> {
     NUCLEOTIDES
         .iter()
         .map(|n| count(n.clone(), dna).and_then(|count| Ok((n.clone(), count))))
-        .collect::<Result<Vec<(char, usize)>, char>>()
-        .and_then(|v| Ok(v.into_iter().collect()))
+        .collect()
 }
