@@ -23,6 +23,6 @@ fn valid(nucleotide: char) -> Result<char, char> {
 pub fn nucleotide_counts(dna: &str) -> Result<HashMap<char, usize>, char> {
     NUCLEOTIDES
         .iter()
-        .map(|n| count(n.clone(), dna).and_then(|count| Ok((n.clone(), count))))
+        .map(|n| count(n.clone(), dna).map(|count| (n.clone(), count)))
         .collect()
 }
