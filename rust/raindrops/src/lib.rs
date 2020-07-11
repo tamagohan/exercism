@@ -15,5 +15,5 @@ pub fn raindrops(n: u32) -> String {
         result = n.to_string();
     }
 
-    return result;
+    result
 }
