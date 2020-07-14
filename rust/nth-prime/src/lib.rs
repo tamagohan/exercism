@@ -11,9 +11,5 @@ fn next_prime(min: u32) -> u32 {
 }
 
 fn is_prime_number(n: u32) -> bool {
-    if n < 3 {
-        true
-    } else {
-        (2..(n / 2 + 1)).all(|num| n % num != 0)
-    }
+    !(2..(n / 2 + 1)).any(|num| n % num == 0)
 }
