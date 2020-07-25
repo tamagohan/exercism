@@ -6,7 +6,7 @@ pub fn build_proverb(list: &[&str]) -> String {
     }
 
     list.windows(2)
-        .map(|w| format!("For want of a {} the {} was lost.", w[0], w[1]))
+        .map(|words| format!("For want of a {} the {} was lost.", words[0], words[1]))
         .chain(iter::once(format!(
             "And all for the want of a {}.",
             list[0]
