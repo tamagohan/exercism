@@ -23,11 +23,5 @@ pub fn abbreviate(phrase: &str) -> String {
         return first_word.to_string().trim_end_matches(':').to_string();
     }
 
-    words
-        .iter()
-        .map(|word| {
-            println!("{:?}", word);
-            to_abbreviate(word)
-        })
-        .collect()
+    words.iter().map(|word| to_abbreviate(word)).collect()
 }
