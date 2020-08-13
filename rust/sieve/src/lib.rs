@@ -3,5 +3,5 @@ fn is_prime(n: u64) -> bool {
 }
 
 pub fn primes_up_to(upper_bound: u64) -> Vec<u64> {
-    (2..(upper_bound + 1)).filter(|i| is_prime(*i)).collect()
+    (2..(upper_bound + 1)).filter(|&i| is_prime(i)).collect()
 }
