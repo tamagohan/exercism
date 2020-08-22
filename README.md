@@ -16,4 +16,5 @@
 * [High Scores](./rust/high-scores/)
 * [Bob](./rust/bob/)
 * [Clock](./rust/clock/)
+* [DOT DSL](./rust/dot-dsl/)
 * [ETL](./rust/etl/)
