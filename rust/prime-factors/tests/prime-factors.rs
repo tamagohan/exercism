@@ -31,7 +31,6 @@ fn test_product_of_primes() {
 }
 
 #[test]
-#[ignore]
 fn test_factors_include_large_prime() {
     assert_eq!(factors(93_819_012_551), vec![11, 9539, 894_119]);
 }
