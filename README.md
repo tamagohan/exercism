@@ -19,3 +19,4 @@
 * [Clock](./rust/clock)
 * [DOT DSL](./rust/dot-dsl)
 * [ETL](./rust/etl)
+* [RNA Transcription](./rust/rna-transcription)
